@@ -6,7 +6,7 @@ from bokeh.models import ColumnDataSource, HoverTool, CrosshairTool, BasicTicker
 
 WINDOWS = 96
 
-def candlestick_plot(df: pd.DataFrame, overlay_ti: pd.DataFrame, subopanel_ti: pd.DataFrame, sub_order: tuple) -> \
+def candlestick_plot(df: pd.DataFrame, overlay_ti: pd.DataFrame, subpanel_ti: pd.DataFrame, sub_order: tuple) -> \
 Tuple[figure, ColumnDataSource, ColumnDataSource, figure, ColumnDataSource, figure, ColumnDataSource, ColumnDataSource, ColumnDataSource]:
     """Creación gráfico de velas y zigzag, y objetos respectivos para su actualización tiempo real .
     Candlestick: figura que contiene gráfica de velas y línea para zz
@@ -38,9 +38,10 @@ Tuple[figure, ColumnDataSource, ColumnDataSource, figure, ColumnDataSource, figu
 
     # === Grid/Ticks === #
     dashboard.grid.grid_line_color = 'black'
-    ticker = BasicTicker(desired_num_ticks=10)
-    dashboard.xgrid.ticker = ticker
-    dashboard.ygrid.ticker = ticker
+
+    # ticker = BasicTicker(desired_num_ticks=10)
+    # dashboard.xgrid.ticker = ticker
+    # dashboard.ygrid.ticker = ticker
 
     crosshair = CrosshairTool(line_color="white")  # puedes usar hex o nombres de color
     dashboard.add_tools(crosshair)
@@ -72,10 +73,12 @@ Tuple[figure, ColumnDataSource, ColumnDataSource, figure, ColumnDataSource, figu
 
     #############################################################################################################################################################
 
-    upper_cols = [col for col in subopanel_ti.columns if sub_order[0] in col]
-    lower_cols = [col for col in subopanel_ti.columns if sub_order[1] in col]
+    upper_cols = [col for col in subpanel_ti.columns if sub_order[0] in col]
+    lower_cols = [col for col in subpanel_ti.columns if sub_order[1] in col]
 
-    upper_sub, lower_sub = subopanel_ti[upper_cols], subopanel_ti[lower_cols]
+    upper_cols.append('date'), lower_cols.append('date')
+
+    upper_sub, lower_sub = subpanel_ti[upper_cols], subpanel_ti[lower_cols]
 
     source_rgb, source_avgr = ColumnDataSource(data=upper_sub), ColumnDataSource(data=lower_sub)
 
@@ -105,16 +108,16 @@ Tuple[figure, ColumnDataSource, ColumnDataSource, figure, ColumnDataSource, figu
     
     hover_lines_rgb = HoverTool(
         tooltips=[("date", '@date{%Y-%m-%d %H:%M:%S}'),
-                  ("rgbp", "@rgbp"),
-                  ("rgbn", "@rgbn")],
+                  ("RSI", "@rsi"),
+                  ("RSI_MA", "@rsi_ma")],
         formatters={"@date": "datetime"},
         mode="vline",
         renderers=[render_rgb])
 
     hover_lines_avgr = HoverTool(
         tooltips=[("date", '@date{%Y-%m-%d %H:%M:%S}'),
-                  ("avgrp", "@avgrp"),
-                  ("avgrn", "@avgrn")],
+                  ("ATR", "@atr"),
+                  ],
         formatters={"@date": "datetime"},
         mode="vline",
         renderers=[render_avgr])
