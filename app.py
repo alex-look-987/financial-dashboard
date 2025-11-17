@@ -6,8 +6,8 @@ from bokeh.themes import Theme
 from typing import Dict, Tuple
 from bokeh.layouts import column
 from bokeh.plotting import figure
-from dashboard.processing import process_data
 from bokeh.models import ColumnDataSource
+from dashboard.processing import process_data
 from dashboard.plots import candlestick_plot
 
 STYLE = dark_theme
@@ -53,10 +53,13 @@ def update():
     except pd.errors.EmptyDataError:
         pass
 
-layout = column(*[item for tf in timeframes for item in plots[tf]], sizing_mode="stretch_both")
+charts = [item for tf in timeframes for item in plots[tf]]
+
+layout = column(*charts, sizing_mode="stretch_both")
 
 curdoc().add_root(layout)
+
 curdoc().theme = Theme(json=STYLE)
 curdoc().title = contract.upper()
 
-#curdoc().add_periodic_callback(update, 10)
+curdoc().add_periodic_callback(update, 10)
