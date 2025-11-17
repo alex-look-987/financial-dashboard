@@ -1,0 +1,6 @@
+__pycache__/
+
+*.csv
+
+**/*streaming_data*.py
+**/*ibapi_utils*.py
