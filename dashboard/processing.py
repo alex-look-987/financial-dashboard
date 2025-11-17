@@ -32,6 +32,8 @@ def data_processor(df: pd.DataFrame, over_ti: str, sub_ti: str) -> Tuple[pd.Data
     over_cols = [col for col in df.columns if over_ti in col]
     sub_cols = [col for col in df.columns if any(k in col for k in sub_ti)]
 
+    sub_cols.append('date')
+
     overlay_ti = df[over_cols].copy()
     subpanel_ti = df[sub_cols].copy()
 
