@@ -1,21 +1,73 @@
-# financial_dashboard
+# Financial Dashboard – Visualization Market Data OHLC
 
 ---
 
-Implementación de la funcionalidad de soporte de dashboards para más de 1 activo FOREX
+## INTRODUCTION
 
-Desde el archovio _main.py_ se establecerán cantidad y tipo de contrato.
+**Project developed in Python**
 
-Por ejemplo:
+Dashboard template to streaming real-time FX EURUSD OHLC market data from **Interactive Brokers (IBAPI)** for customizable applications.
 
-forex = {'EURUSD': [123, '5100', server_port], 'GBPUSD': [124, '5200', server_port]}
+This is a **demo version** and certain files or logic were intentionally excluded due to confidentiality agreements.
+
+The original project was developed to **Sealiah Technologies**, a private company of Algorithmic Trading.
 
 ---
 
-- key: nombre del contratio
-- valor: [clientid, bokeh_port, server_port]
-- clientid: número de conexión irrepetible para la TWS a través de la IBAPI
-- bokeh_port: número de puerto único para el dashboard
-- server_port: puerto de la TWS (constante ya definida)
+## RESUME
+
+Flexible and scalable Dashboard-based architecture capable of real time market data visualization
+
+Both backend and frontend layers are intentionally modular, allowing the server to adapt to various market data providers, dashboard frameworks.
+
+This enables the solution to scale according to customer development.
+
+Suitable for different business or project requirements.
+
+---
+
+## FUNCIONALITY
+
+- Overlay SMA Close windows [3, 5, 8]m.
+- Subpanel: RSI, ATR.
+- Multi Time Frame
+- Multi Instrument (FX, Stocks, CMMDTY, etc.) (each window for every instrument)
+- Local Deploy
+
+---
+
+## Technology Stack (Replaceable)
+
+### Backend
+
+- IBAPI
+- TA
+- Pandas / NumPy
+
+## Frontend
+
+- Bokeh
+
+### Optional Integrations (Examples)
+
+- Polygon.io
+- Alpaca Markets
+- Crypto WebSocket feeds
+- Cloud Server
+- Dash
+- Ploty
+- Streamlit
+- Desktop Versions
+
+> **NOTE:** Both backend and frontend can be replaced or extended depending on customer needs. Also programming languages.
+
+---
+
+## Possible Uses & Custom Modifications
+
+- Custom Technical Indicators
+- Portfolio Monitoring & Risk Tools
+- Market Analytics
+- News & Sentiment Feeds
 
 ---
