@@ -5,27 +5,15 @@ from bokeh.palettes import Category10
 from bokeh.models import ColumnDataSource, HoverTool, CrosshairTool, BasicTicker
 
 WINDOWS = 96
+TOOLS = "pan, wheel_zoom, xwheel_zoom, ywheel_zoom, reset, xwheel_pan"
 
 def candlestick_plot(df: pd.DataFrame, overlay_ti: pd.DataFrame) -> Tuple[figure, ColumnDataSource, ColumnDataSource]:
-    """Creación gráfico de velas y zigzag, y objetos respectivos para su actualización tiempo real .
-    Candlestick: figura que contiene gráfica de velas y línea para zz
-    source_candle: objeto para gráfico de velas utilizado para actualización en tiempo real
-    source_over: objeto para gráfico de zigzag utilizado para actualización en tiempo real
-
-    Args:
-        df_candle (pd.DataFrame): _date, OHLC, color_
-        df_zz (pd.DataFrame): _date, zz_line_
-
-    Returns:
-        Tuple[figure, ColumnDataSource, ColumnDataSource]: __candlestick, source_candle, source_over_
-    """
-
     source_candle: ColumnDataSource = ColumnDataSource(df)
     source_over: ColumnDataSource = ColumnDataSource(overlay_ti)
 
     # ----- Initial Config ----- #
     dashboard: figure = figure(
-        tools="pan, wheel_zoom, xwheel_zoom, ywheel_zoom, reset, xwheel_pan",
+        tools=TOOLS,
         width=1750, height=550, toolbar_location='right', active_drag='pan', active_scroll='wheel_zoom',
         x_axis_type='datetime', y_axis_location='right', output_backend="webgl")
 
@@ -84,13 +72,13 @@ def subpanel_plot(dashboard: figure, subpanel_ti: pd.DataFrame, sub_order: tuple
 
     source_rgb, source_avgr = ColumnDataSource(data=upper_sub), ColumnDataSource(data=lower_sub)
 
-    p_rgb: figure = figure(tools='reset, pan, ywheel_zoom', x_axis_type="datetime", width=1750, height=200, y_axis_location="right", 
+    p_rgb: figure = figure(tools=TOOLS, x_axis_type="datetime", width=1750, height=200, y_axis_location="right", 
                            background_fill_color = 'black', toolbar_location='right', x_range=dashboard.x_range, active_drag='pan', ) # output_backend="webgl"
     
     crosshair = CrosshairTool(line_color="white")  # puedes usar hex o nombres de color
     p_rgb.add_tools(crosshair)
 
-    p_avgr: figure = figure(tools='reset, pan, ywheel_zoom', x_axis_type="datetime", width=1750, height=200, y_axis_location="right",
+    p_avgr: figure = figure(tools=TOOLS, x_axis_type="datetime", width=1750, height=200, y_axis_location="right",
                              background_fill_color = 'black', toolbar_location='right', x_range=dashboard.x_range, active_drag='pan', ) # output_backend="webgl"
     
     crosshair = CrosshairTool(line_color="white")  # puedes usar hex o nombres de color
