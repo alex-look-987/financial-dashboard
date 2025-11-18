@@ -8,7 +8,7 @@ from bokeh.layouts import column
 from bokeh.plotting import figure
 from bokeh.models import ColumnDataSource
 from dashboard.processing import process_data
-from dashboard.plots import candlestick_plot
+from dashboard.plots import candlestick_plot, subpanel_plot
 
 STYLE = dark_theme
  
@@ -23,7 +23,8 @@ dfs: Dict[str, Tuple[pd.DataFrame, pd.DataFrame]] = {}
 for tf in timeframes:
     df_candle, overlay, subpanel = process_data(f"{contract}_{tf}.csv")
 
-    candlestick, candle, src_over, p_rgb, src_rgb, p_avgr, src_avgr = candlestick_plot(df_candle, overlay, subpanel, ('rsi', 'atr'))
+    candlestick, candle, src_over = candlestick_plot(df_candle, overlay)
+    candlestick, p_rgb, src_rgb, p_avgr, src_avgr = subpanel_plot(candlestick, subpanel, ('rsi', 'atr'))
     
     plots[tf] = (candlestick, p_rgb, p_avgr)
 

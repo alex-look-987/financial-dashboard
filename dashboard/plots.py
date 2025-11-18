@@ -6,8 +6,7 @@ from bokeh.models import ColumnDataSource, HoverTool, CrosshairTool, BasicTicker
 
 WINDOWS = 96
 
-def candlestick_plot(df: pd.DataFrame, overlay_ti: pd.DataFrame, subpanel_ti: pd.DataFrame, sub_order: tuple) -> \
-Tuple[figure, ColumnDataSource, ColumnDataSource, figure, ColumnDataSource, figure, ColumnDataSource, ColumnDataSource, ColumnDataSource]:
+def candlestick_plot(df: pd.DataFrame, overlay_ti: pd.DataFrame) -> Tuple[figure, ColumnDataSource, ColumnDataSource]:
     """Creación gráfico de velas y zigzag, y objetos respectivos para su actualización tiempo real .
     Candlestick: figura que contiene gráfica de velas y línea para zz
     source_candle: objeto para gráfico de velas utilizado para actualización en tiempo real
@@ -24,19 +23,19 @@ Tuple[figure, ColumnDataSource, ColumnDataSource, figure, ColumnDataSource, figu
     source_candle: ColumnDataSource = ColumnDataSource(df)
     source_over: ColumnDataSource = ColumnDataSource(overlay_ti)
 
-    # === Initial Config === #
+    # ----- Initial Config ----- #
     dashboard: figure = figure(
         tools="pan, wheel_zoom, xwheel_zoom, ywheel_zoom, reset, xwheel_pan",
         width=1750, height=550, toolbar_location='right', active_drag='pan', active_scroll='wheel_zoom',
         x_axis_type='datetime', y_axis_location='right', output_backend="webgl")
 
-    # === Ranges === #
+    # ---------------- Ranges ---------------- #
     dashboard.x_range.follow = "end"
     dashboard.xaxis.visible = False
     dashboard.x_range.follow_interval = WINDOWS
     dashboard.x_range.range_padding = 0.003
 
-    # === Grid/Ticks === #
+    # ------------- Grid/Ticks ------------- #
     dashboard.grid.grid_line_color = 'black'
 
     # ticker = BasicTicker(desired_num_ticks=10)
@@ -61,7 +60,7 @@ Tuple[figure, ColumnDataSource, ColumnDataSource, figure, ColumnDataSource, figu
             line_width=2.3,
             line_color=color)
 
-    # === Hover Tool === #
+    # ----------------------------- Hover Tool ----------------------------- #
     hover = HoverTool(
         tooltips=[
             ("Date", '@date{%Y-%m-%d %H:%M:%S}'),
@@ -71,7 +70,10 @@ Tuple[figure, ColumnDataSource, ColumnDataSource, figure, ColumnDataSource, figu
     
     dashboard.add_tools(hover)
 
-    #############################################################################################################################################################
+    return dashboard, source_candle, source_over
+
+def subpanel_plot(dashboard: figure, subpanel_ti: pd.DataFrame, sub_order: tuple) -> Tuple[figure, figure, ColumnDataSource, figure, ColumnDataSource]:
+    # ------------------------------ Sub Panel ------------------------------ #
 
     upper_cols = [col for col in subpanel_ti.columns if sub_order[0] in col]
     lower_cols = [col for col in subpanel_ti.columns if sub_order[1] in col]
@@ -98,7 +100,7 @@ Tuple[figure, ColumnDataSource, ColumnDataSource, figure, ColumnDataSource, figu
     p_rgb.grid.grid_line_color = 'black'
     p_avgr.grid.grid_line_color = 'black'
 
-    p_avgr.xaxis.major_label_overrides = {i: date.strftime('%d/%m/%Y  %H:%M:%S') for i, date in enumerate(df["date"])}
+    p_avgr.xaxis.major_label_overrides = {i: date.strftime('%d/%m/%Y  %H:%M:%S') for i, date in enumerate(subpanel_ti["date"])}
 
     render_rgb = p_rgb.line(x="index", y="rsi", line_color="orange", line_width=1.5, source=source_rgb)
     p_rgb.line(x="index", y="rsi_ma", line_color="white", line_width=1.5, source=source_rgb)
@@ -123,5 +125,5 @@ Tuple[figure, ColumnDataSource, ColumnDataSource, figure, ColumnDataSource, figu
         renderers=[render_avgr])
 
     p_rgb.add_tools(hover_lines_rgb), p_avgr.add_tools(hover_lines_avgr)
-    
-    return dashboard, source_candle, source_over, p_rgb, source_rgb, p_avgr, source_avgr
+
+    return dashboard, p_rgb, source_rgb, p_avgr, source_avgr
