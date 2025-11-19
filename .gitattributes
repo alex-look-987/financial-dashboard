@@ -1,2 +1,2 @@
 *.py linguist-detectable=true
-example/dashboard_demo.html linguist-detectable=true
+# example/dashboard_demo.html linguist-detectable=true
