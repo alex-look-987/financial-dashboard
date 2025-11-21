@@ -1,4 +1,4 @@
-*.py linguist-detectable=true
+# *.py linguist-detectable=true
 # example/dashboard_demo.html linguist-detectable=true
 
 # Ignorar HTML en las estadísticas de GitHub
